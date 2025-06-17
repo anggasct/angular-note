@@ -1,0 +1,80 @@
+<div class="note-editor-container h-100 d-flex flex-column p-4 bg-white shadow rounded border">
+
+  <ng-container *ngIf="currentNote() !== null; else noNoteSelected">
+    <div class="editor-header d-flex justify-content-between align-items-start mb-4">
+      <mat-form-field class="w-100 me-3" appearance="outline">
+        <mat-label>Title</mat-label>
+        <input matInput [(ngModel)]="currentNote()!.title" placeholder="Note title" class="fs-5">
+        <mat-icon matPrefix class="me-2 text-primary">title</mat-icon>
+      </mat-form-field>
+
+      <div class="editor-actions d-flex gap-2">
+        <button mat-raised-button color="primary"
+                class="save-button d-flex align-items-center"
+                [disabled]="isSaving()"
+                (click)="saveNote()">
+          <mat-icon class="me-1">save</mat-icon>
+          {{ isSaving() ? 'Saving...' : (isNewNote() ? 'Create' : 'Save') }}
+        </button>
+        <button *ngIf="!isNewNote()" mat-icon-button color="warn" class="delete-button" (click)="deleteNote()" matTooltip="Delete note">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="card mb-3 flex-grow-1">
+      <div class="card-header bg-light py-2">
+        <strong>Note Content</strong>
+      </div>
+      <div class="card-body p-0">
+        <quill-editor [(ngModel)]="currentNote()!.content"
+                      [modules]="quillConfig"
+                      placeholder="Write your note content here..."
+                      class="h-100 w-100 border-0"></quill-editor>
+      </div>
+    </div>
+
+    <div class="note-metadata card bg-light">
+      <div class="card-body py-2 px-3">
+        <div class="row">
+          <ng-container *ngIf="!isNewNote() && currentNote()!.createdAt">
+            <div class="col-md-6">
+              <div class="d-flex align-items-center">
+                <mat-icon class="metadata-icon fs-6 me-2 text-secondary">event</mat-icon>
+                <small class="text-muted">Created: {{ currentNote()!.createdAt | date:'medium' }}</small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex align-items-center">
+                <mat-icon class="metadata-icon fs-6 me-2 text-secondary">update</mat-icon>
+                <small class="text-muted">Updated: {{ currentNote()!.updatedAt | date:'medium' }}</small>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="isNewNote()">
+            <div class="col-12">
+              <span class="text-muted fst-italic d-flex align-items-center">
+                <mat-icon class="metadata-icon fs-6 me-2 text-info">info</mat-icon>
+                Click "Create" to save this new note.
+              </span>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noNoteSelected>
+    <div class="card text-center mt-4">
+      <div class="card-body py-5">
+        <mat-icon class="d-block mx-auto mb-4 text-primary opacity-75" style="font-size: 80px; height: 80px; width: 80px;">description</mat-icon>
+        <h2 class="fw-light mb-4">No note selected</h2>
+        <button mat-raised-button color="primary"
+                class="btn btn-primary btn-lg"
+                (click)="createNewNote()">
+          <mat-icon class="me-2">add</mat-icon> Create New Note
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</div>
