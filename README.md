@@ -6,8 +6,7 @@ A simple note-taking application built with Angular.
 
 ### Prerequisites
 
-- Node.js (LTS version recommended)
-- npm (comes with Node.js)
+- Node.js (version 20)
 
 ### Installation
 
