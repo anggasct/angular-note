@@ -4,18 +4,13 @@ import com.astrapay.dto.NoteDto;
 import com.astrapay.entity.Note;
 import com.astrapay.mapper.NoteMapper;
 import com.astrapay.repository.NoteRepository;
-import com.astrapay.util.NoteSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -31,13 +26,14 @@ public class NoteService {
     }
 
     public NoteDto updateNote(Long id, NoteDto noteDto) {
-        if (!noteRepository.existsById(id)) {
-            throw new NoSuchElementException("Note with id " + id + " not found");
-        }
-        noteDto.setId(id);
-        Note note = noteMapper.toEntity(noteDto);
-        Note updatedNote = noteRepository.save(note);
-        return noteMapper.toDto(updatedNote);
+        return noteRepository.findById(id)
+                .map(existingNote -> {
+                    existingNote.setTitle(noteDto.getTitle());
+                    existingNote.setContent(noteDto.getContent());
+                    Note updatedNote = noteRepository.save(existingNote);
+                    return noteMapper.toDto(updatedNote);
+                })
+                .orElseThrow(() -> new NoSuchElementException("Note with id " + id + " not found"));
     }
 
     public NoteDto getNoteById(Long id) {
@@ -54,9 +50,7 @@ public class NoteService {
     }
 
     public Page<NoteDto> getAllNotes(Pageable pageable) {
-        return noteRepository.findAll(pageable)
-                .map(noteMapper::toDto);
+        return noteRepository.findAll(pageable).map(noteMapper::toDto);
     }
-
 
 }

@@ -44,7 +44,7 @@ public class NoteController {
     }
 
     @GetMapping
-    @ApiOperation(value = "Get all notes with pagination")
+    @ApiOperation(value = "Get all notes")
     @ApiResponses(
             value = {
                     @ApiResponse(code = 200, message = "OK")

@@ -1,8 +1,8 @@
 package com.astrapay.entity;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,8 +21,8 @@ public class Note {
     private Long id;
     private String title;
     private String content;
-    @CreatedDate
+    @CreationTimestamp
     protected LocalDateTime createdAt;
-    @LastModifiedDate
+    @UpdateTimestamp
     protected LocalDateTime updatedAt;
 }

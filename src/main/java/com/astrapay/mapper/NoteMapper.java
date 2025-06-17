@@ -20,6 +20,8 @@ public class NoteMapper {
                 .id(note.getId())
                 .title(note.getTitle())
                 .content(note.getContent())
+                .createdAt(note.getCreatedAt())
+                .updatedAt(note.getUpdatedAt())
                 .build();
     }
 }
